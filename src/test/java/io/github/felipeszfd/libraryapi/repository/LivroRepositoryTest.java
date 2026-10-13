@@ -26,7 +26,7 @@ public class LivroRepositoryTest {
         livro.setIsbn("12345");
         livro.setPreco(BigDecimal.valueOf(100));
         livro.setGenero(GeneroLivro.FICCAO);
-        livro.setTitulo("UFO");
+        livro.setTitulo("Outro Livro");
         livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
 
         Autor autor = autorRepository.findById(UUID.fromString("13903be3-653e-4c56-b9f3-d60bd02a1115")).orElse(null);
@@ -35,5 +35,45 @@ public class LivroRepositoryTest {
 
         livroRepository.save(livro);
 
+    }
+
+    @Test
+    void salvarCascadeTest() { //Raro usar cascade
+        Livro livro = new Livro();
+        livro.setIsbn("12345");
+        livro.setPreco(BigDecimal.valueOf(100));
+        livro.setGenero(GeneroLivro.FICCAO);
+        livro.setTitulo("Outro Livro");
+        livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
+
+        Autor autor = new Autor();
+        autor.setNome("Felipe");
+        autor.setNacionalidade("Brasileira");
+        autor.setDataNascimento(LocalDate.of(2001, 11, 29));
+
+        livro.setAutor(autor);
+
+        livroRepository.save(livro);
+    }
+
+    @Test
+    void salvarAutorELivroTest() { //Raro usar cascade
+        Livro livro = new Livro();
+        livro.setIsbn("12345");
+        livro.setPreco(BigDecimal.valueOf(100));
+        livro.setGenero(GeneroLivro.FICCAO);
+        livro.setTitulo("Terceiro Livro");
+        livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
+
+        Autor autor = new Autor();
+        autor.setNome("Felipe");
+        autor.setNacionalidade("Brasileira");
+        autor.setDataNascimento(LocalDate.of(2001, 11, 29));
+
+        autorRepository.save(autor);
+
+        livro.setAutor(autor);
+
+        livroRepository.save(livro);
     }
 }
