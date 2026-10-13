@@ -6,6 +6,7 @@ import io.github.felipeszfd.libraryapi.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -75,5 +76,38 @@ public class LivroRepositoryTest {
         livro.setAutor(autor);
 
         livroRepository.save(livro);
+    }
+
+    @Test
+    void atualizarAutorDoLivro() {
+        var livroParaAtualizar = livroRepository.findById(UUID.fromString("6c7b4ef6-bffe-4d43-9a31-76c5712383bd")).orElse(null);
+        Autor autor = autorRepository.findById(UUID.fromString("b8a30f89-0770-41e5-9613-27c1fb1ddd73")).orElse(null);
+
+        livroParaAtualizar.setAutor(autor);
+
+        livroRepository.save(livroParaAtualizar);
+    }
+
+    @Test
+    void deletar() {
+        UUID id = UUID.fromString("6c7b4ef6-bffe-4d43-9a31-76c5712383bd");
+        livroRepository.deleteById(id);
+    }
+
+    @Test
+    void deletarCascade() {
+        UUID id = UUID.fromString("6c7b4ef6-bffe-4d43-9a31-76c5712383bd");
+        livroRepository.deleteById(id);
+    }
+
+    @Test
+    @Transactional
+    void buscarLivroTest() {
+        UUID id = UUID.fromString("");
+        Livro livro = livroRepository.findById(id).orElse(null);
+        System.out.println("Livro: ");
+        System.out.println(livro.getTitulo());
+        System.out.println("Autor: ");
+        System.out.println(livro.getAutor().getNome());
     }
 }
