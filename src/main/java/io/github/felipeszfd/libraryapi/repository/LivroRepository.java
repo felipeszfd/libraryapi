@@ -3,7 +3,10 @@ package io.github.felipeszfd.libraryapi.repository;
 import io.github.felipeszfd.libraryapi.model.Autor;
 import io.github.felipeszfd.libraryapi.model.GeneroLivro;
 import io.github.felipeszfd.libraryapi.model.Livro;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,20 +15,25 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * @see LivroRepositoryTest
  */
-public interface LivroRepository extends JpaRepository<Livro, UUID> {
+public interface LivroRepository extends JpaRepository<Livro, UUID>, JpaSpecificationExecutor<Livro> {
 
+    Page<Livro> findByAutor(Autor autor, Pageable pageable);
+
+    // Query Method
+    // select * from livro where id_autor = id
     List<Livro> findByAutor(Autor autor);
 
     // select * from livro where titulo = titulo
     List<Livro> findByTitulo(String titulo);
 
     // select * from livro where isbn = ?
-    List<Livro> findByIsbn(String isbn);
+    Optional<Livro> findByIsbn(String isbn);
 
     // select * from livro where titulo = ? and preco = ?
     List<Livro> findByTituloAndPreco(String titulo, BigDecimal preco);
@@ -82,4 +90,6 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     @Transactional
     @Query(" update Livro set dataPublicacao = ?1 ")
     void updateDataPublicacao(LocalDate novaData);
+
+    boolean existsByAutor(Autor autor);
 }
